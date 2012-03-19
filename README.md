@@ -3,6 +3,23 @@
 The goal of this is to automate my development practices so starting new
 projects is an easy streamlined process.
 
+# directory structure
+
+- source root (a.k.a. CMAKE\_SOURCE\_DIR)
+  - main: main executable(s) will be built there
+  - cmake: cmake extensions, macros and scripts
+  - ruby: un-gem-ified ruby helpers
+  - lib: project specific libraries:
+    - every project will have a static project library linked into main
+      executable and tests
+    - some dependencies may be placed under lib as git submodules
+      - cxxtest
+      - qxmlrpc
+  - test: cxxtest based unit tests
+  - vendor: bundler installs gems into vendor/bundle
+  - features: in case cucumber is used for BDD that's where it expects
+    features and stepdefs
+
 # cmake
 
 I use cmake as a basis for C/C++ build system. The boilerplate comes

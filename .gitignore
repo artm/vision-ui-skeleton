@@ -1,4 +1,7 @@
-.rbenv-version
+/.rbenv-version
 /.bundle
 /vendor
 /build
+/build.log
+/test.log
+/bin

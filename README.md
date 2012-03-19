@@ -5,20 +5,18 @@ projects is an easy streamlined process.
 
 # directory structure
 
-- source root (a.k.a. CMAKE\_SOURCE\_DIR)
+- source root
   - main: main executable(s) will be built there
+    - gui code that won't be tested goes here as well
   - cmake: cmake extensions, macros and scripts
-  - ruby: un-gem-ified ruby helpers
+  - ruby: ruby helpers and private libraries that aren't gems yet
   - lib: project specific libraries:
     - every project will have a static project library linked into main
       executable and tests
     - some dependencies may be placed under lib as git submodules
       - cxxtest
-      - qxmlrpc
   - test: cxxtest based unit tests
   - vendor: bundler installs gems into vendor/bundle
-  - features: in case cucumber is used for BDD that's where it expects
-    features and stepdefs
 
 # cmake
 
@@ -50,12 +48,6 @@ ruby version.
 ## bundler
 
 bundler is used for gem management.
-
-## cucumber
-
-Cucumber is used for behavior driven design. It is combined with ruby
-naturally and with C++ / Qt unnaturally. In Qt-less C++ projects (no
-GUI) cucumber calls out to c++ via ruby's popen or something like that.
 
 ## guard
 

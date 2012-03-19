@@ -9,4 +9,3 @@ gem 'guard-shell'
 gem 'rspec'
 gem 'guard-rspec'
 
-gem 'cucumber'

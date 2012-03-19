@@ -7,15 +7,20 @@ guard :bundler do
   watch('Gemfile')
 end
 
+guard :rspec, :version => 2, :spec_paths => ["ruby/spec"] do
+  watch(%r{^ruby/spec/.+_spec\.rb$})
+  watch(%r{^ruby/.*/([^/]+)\.rb$}) { |m| "ruby/spec/#{m[1]}_spec.rb" }
+end
+
 # Poor mans CT/CI
 guard :shell do
   watch(/CMakeLists.txt$|\.cmake$|\.(cpp|h|hpp)$/) do |m|
     # ignore_paths doesn't seem to work
-    unless m[0] =~ %r{^(build|vendor|test/cxxtest)/}
+    unless m[0] =~ %r{^(build|vendor|lib/cxxtest)/}
       message("Rebuilding because #{m[0]} has changed", :title => 'Make')
       puts
       File.open("build.log", "w") do |log|
-        execute 'make -C build', :title => "Make", :log => log
+        execute 'time make -C build', :title => "Make", :log => log
       end
     end
   end

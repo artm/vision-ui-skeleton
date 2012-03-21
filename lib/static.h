@@ -1,1 +1,4 @@
-// TODO include heavy cpp headers here
+#include <QtGui>
+#include <QtCore>
+
+#include <opencv2/opencv.hpp>

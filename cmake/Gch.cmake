@@ -1,15 +1,6 @@
 # Based on a script from
 # http://www.cmake.org/Bug/view.php?id=1260#c21475
-MACRO(ADD_PCH_INCLUDE HEADER SOURCES)
-  SET_SOURCE_FILES_PROPERTIES(
-    ${${SOURCES}}
-    PROPERTIES
-    COMPILE_FLAGS "-Winvalid-pch -include ${HEADER}")
-ENDMACRO(ADD_PCH_INCLUDE)
-
 MACRO (ADD_PCH_RULE HEADER SOURCES)
-  # FIXME this variable is duplicated because I don't remember cmake scope rules
-  ADD_PCH_INCLUDE(${HEADER} ${SOURCES})
   SET(PRECOMPILED_HEADER "${HEADER}.gch")
   LIST(APPEND ${SOURCES} ${PRECOMPILED_HEADER})
 

@@ -1,14 +1,74 @@
 #include "artmgl.h"
 
-struct ArtmGL::Detail {
+class CaptureThread : public QThread
+{
     cv::VideoCapture capture;
+    bool finish;
+public:
+    CaptureThread(QObject * parent)
+        : QThread(parent)
+    {
+    }
+
+    void retrieve(cv::Mat& frame)
+    {
+        capture >> frame;
+    }
+
+    void stop() { finish = true; }
+signals:
+    void frameAvailable( CaptureThread* );
+
+protected:
+    void run()
+    {
+        finish = false;
+        capture.open(0);
+        while (!finish) {
+            capture.grab();
+            emit frameAvailable( this );
+        }
+    }
+};
+
+struct ArtmGL::Detail {
+    CaptureThread * capture_thread;
     cv::Mat input_frame, paint_frame;
     QImage input_image;
-    QTimer timer;
 };
 
 static bool greyTableInit = false;
 static QVector<QRgb> greyTable;
+QImage CvMat2QImage(const cv::Mat& cvmat);
+
+ArtmGL::ArtmGL(QWidget *parent)
+    : QWidget(parent),
+    detail( new Detail() )
+{
+    detail->capture_thread = new CaptureThread(this);
+    detail->capture_thread->start();
+}
+
+ArtmGL::~ArtmGL()
+{
+
+    detail->capture_thread->stop();
+    detail->capture_thread->wait(3000);
+}
+
+void ArtmGL::pump()
+{
+    detail->capture >> detail->input_frame;
+    detail->input_image = CvMat2QImage( detail->input_frame );
+    update();
+}
+
+void ArtmGL::paintEvent ( QPaintEvent * event )
+{
+    QPainter painter(this);
+    painter.drawImage(rect(), detail->input_image, detail->input_image.rect());
+}
+
 QImage CvMat2QImage(const cv::Mat& cvmat)
 {
     int height = cvmat.rows;
@@ -33,27 +93,3 @@ QImage CvMat2QImage(const cv::Mat& cvmat)
     }
 }
 
-ArtmGL::ArtmGL(QWidget *parent)
-    : QWidget(parent),
-    detail( new Detail() )
-{
-    detail->capture.open(0);
-    connect(&detail->timer, SIGNAL(timeout()), this, SLOT( pump() ));
-    detail->timer.start(50);
-}
-
-ArtmGL::~ArtmGL()
-{}
-
-void ArtmGL::pump()
-{
-    detail->capture >> detail->input_frame;
-    detail->input_image = CvMat2QImage( detail->input_frame );
-    update();
-}
-
-void ArtmGL::paintEvent ( QPaintEvent * event )
-{
-    QPainter painter(this);
-    painter.drawImage(rect(), detail->input_image, detail->input_image.rect());
-}

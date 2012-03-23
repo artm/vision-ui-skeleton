@@ -1,0 +1,33 @@
+random order
+
+- separate thread capture/cv + double buffering
+- gui with some "parameters"
+- chose to capture from camera / video
+
+- what about PeopleVote? it will be reacting on files appearing...
+- thus:
+  - a clone for the mirror + implementation
+  - a clone for people vote + decide how to deal with it
+
+- vision double buffering:
+  - the goal is to do vision while gui thread has access to the previous
+    frame results.
+  - but we don't want to allow overwrite the index in the middle of the
+    paint. on the other hand we don't want to block the gui thread in
+    painting. Mutex or no mutex? Seems like mutex.
+  - the question is how to make it flexible enough. Parts:
+
+  - a capture thread - library
+  - vision processor consumes captured frames in the capture
+  - vision data x 2
+
+
+  - e.g. make the ArtmGL contain the two datas and be able to process
+    them. It also provides the 'consume()' slot to be called in the
+    vision thread, which retrieves the captured data, processes it and
+    informs the GUI thread.
+
+  - other possibility is to send a signal. only how can signals work
+    with double buffering? e.g. the signal informs, that data is
+    available and interested consumer may use it. The consumer then
+    supplies storage from the current buffer

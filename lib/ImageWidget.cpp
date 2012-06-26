@@ -1,6 +1,6 @@
 #include "ImageWidget.hpp"
 
-namespace VoteCounter {
+namespace QArtm {
 
 struct ImageWidget::Detail {
     bool resizing;

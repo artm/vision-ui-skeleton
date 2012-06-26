@@ -1,6 +1,6 @@
 #pragma once
 
-namespace VoteCounter {
+namespace QArtm {
 class ImageWidget : public QWidget {
     Q_OBJECT
 public:

@@ -37,8 +37,8 @@ void ImageWidget::paintEvent ( QPaintEvent * event )
 
     painter.drawImage( QRect(targetOffs, targetSize), m_image, m_image.rect());
     painter.save();
-    painter.scale( (float)targetSize.width() / m_image.size().width(),
-                   (float)targetSize.height() / m_image.size().height());
+    painter.scale( (float)targetSize.width() / m_image.width(),
+                   (float)targetSize.height() / m_image.height());
     painter.drawPicture( targetOffs, m_overlay );
     painter.restore();
 
@@ -81,9 +81,11 @@ void ImageWidget::mouseReleaseEvent( QMouseEvent * event )
 {
     m_detail->dragging = false;
     update();
+    QSize targetSize(m_image.size());
+    targetSize.scale( size(), Qt::KeepAspectRatio );
     // convert current rectangle to original image coordinates
-    float sx = (float)m_image.width() / width();
-    float sy = (float)m_image.height() / height();
+    float sx = (float)m_image.width() / targetSize.width();
+    float sy = (float)m_image.height() / targetSize.height();
 
     if ( (m_detail->dragStart-m_detail->dragPos).manhattanLength() < 2 )
         emit pointClicked( QPoint( m_detail->dragStart.x() * sx,

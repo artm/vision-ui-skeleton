@@ -10,6 +10,7 @@ public:
     void setImage( const QImage& image );
     QPicture& overlay() { return m_overlay; }
     void setOverlay( const QPicture& overlay ) { m_overlay = overlay; update(); }
+    void clearOverlay( ) { m_overlay = QPicture(); }
 
 signals:
     void rectSelected( const QRect& rect );

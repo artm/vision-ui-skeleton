@@ -35,4 +35,6 @@ inline QPolygon toQPolygon( const std::vector< cv::Point >& contour )
     return poly;
 }
 
+cv::Rect grow( const cv::Rect& rect, double scale );
+
 }

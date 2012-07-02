@@ -27,4 +27,18 @@ QImage wrapImage( cv::Mat& cvmat)
     }
 }
 
+cv::Rect grow( const cv::Rect& rect, double scale )
+{
+    cv::Size size = rect.size();
+
+    size.width = (scale * size.width);
+    size.height = (scale * size.height);
+
+    cv::Point offset = size - rect.size();
+    offset.x /= 2;
+    offset.y /= 2;
+
+    return cv::Rect( rect.tl() - offset, size );
+}
+
 }

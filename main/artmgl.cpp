@@ -1,35 +1,7 @@
 #include "artmgl.h"
+#include <CaptureThread.hpp>
 
-class CaptureThread : public QThread
-{
-    cv::VideoCapture capture;
-    bool finish;
-public:
-    CaptureThread(QObject * parent)
-        : QThread(parent)
-    {
-    }
-
-    void retrieve(cv::Mat& frame)
-    {
-        capture >> frame;
-    }
-
-    void stop() { finish = true; }
-signals:
-    void frameAvailable( CaptureThread* );
-
-protected:
-    void run()
-    {
-        finish = false;
-        capture.open(0);
-        while (!finish) {
-            capture.grab();
-            emit frameAvailable( this );
-        }
-    }
-};
+using namespace QArtm;
 
 struct ArtmGL::Detail {
     CaptureThread * capture_thread;
@@ -58,9 +30,11 @@ ArtmGL::~ArtmGL()
 
 void ArtmGL::pump()
 {
+    /*
     detail->capture >> detail->input_frame;
     detail->input_image = CvMat2QImage( detail->input_frame );
     update();
+    */
 }
 
 void ArtmGL::paintEvent ( QPaintEvent * event )

@@ -1,15 +1,16 @@
 #include "LoggingHub.hpp"
 #include "Pretty.hpp"
 #include "Throttle.hpp"
+#include "LogMessageEvent.hpp"
 
 using namespace QArtm;
 
-LoggingHub * LoggingHub::singleton = 0;
+QWeakPointer<LoggingHub> LoggingHub::singleton;
 
 LoggingHub::LoggingHub( QMainWindow * mainWindow )
     : m_mainWindow(mainWindow)
-      , m_throttle(new Throttle(20))
-      , m_maxLines(50)
+    , m_throttle(new Throttle(20))
+    , m_maxLines(50)
 {
     m_prevHandler = qInstallMsgHandler( &dispatchMessage );
 
@@ -47,8 +48,26 @@ void LoggingHub::setup( QMainWindow * window )
     singleton = new LoggingHub( window );
 }
 
+bool LoggingHub::event ( QEvent * e )
+{
+    if (e->type() == (QEvent::Type)Event::LOG_MESSAGE) {
+        LogMessageEvent * lme = dynamic_cast<LogMessageEvent*>(e);
+        Q_ASSERT(lme);
+        message( lme->msgType(), qPrintable( lme->message() ) );
+        return true;
+    }
+
+    return QObject::event(e);
+}
+
 void LoggingHub::message(QtMsgType type, const char *raw)
 {
+    if (QThread::currentThread() != thread()) {
+        LogMessageEvent * event = new LogMessageEvent( type, raw );
+        QCoreApplication::postEvent( this, event );
+        return;
+    }
+
     if (m_mainWindow) {
         QString tag;
         QColor color;
@@ -101,7 +120,7 @@ void LoggingHub::message(QtMsgType type, const char *raw)
 void LoggingHub::dispatchMessage(QtMsgType type, const char *msg)
 {
     if (singleton)
-        singleton->message(type, msg);
+        singleton.data()->message(type, msg);
 }
 
 bool LoggingHub::eventFilter ( QObject * watched, QEvent * event )

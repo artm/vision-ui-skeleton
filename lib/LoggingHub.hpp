@@ -14,6 +14,7 @@ protected:
     virtual ~LoggingHub();
     void message(QtMsgType type, const char *msg);
 
+    virtual bool event ( QEvent * e );
     virtual bool eventFilter ( QObject * watched, QEvent * event );
 
     static void dispatchMessage(QtMsgType type, const char *msg);
@@ -28,7 +29,7 @@ protected:
     QScopedPointer<Throttle> m_throttle;
     int m_maxLines;
 
-    static LoggingHub * singleton;
+    static QWeakPointer<LoggingHub> singleton;
 };
 
 }

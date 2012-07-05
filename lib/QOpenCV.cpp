@@ -4,7 +4,7 @@ namespace QOpenCV {
 
 static bool s_greyTableInit = false;
 static QVector<QRgb> s_greyTable;
-QImage wrapImage( cv::Mat& cvmat)
+QImage wrapImage( const cv::Mat& cvmat)
 {
     int height = cvmat.rows;
     int width = cvmat.cols;

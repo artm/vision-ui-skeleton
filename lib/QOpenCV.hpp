@@ -1,7 +1,7 @@
 #pragma once
 
 namespace QOpenCV {
-QImage wrapImage( cv::Mat& image );
+QImage wrapImage( const cv::Mat& image );
 inline cv::Rect toCv( const QRect& rect )
 {
     return cv::Rect( cv::Point(rect.x(), rect.y()), cv::Size(rect.width(), rect.height())  );

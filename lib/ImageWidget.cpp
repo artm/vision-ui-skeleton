@@ -55,7 +55,12 @@ QSize ImageWidget::sizeHint () const
 
 void ImageWidget::setImage( const QImage& image )
 {
+    QImage old = m_image;
     m_image = image;
+    if (old.size() != image.size()) {
+        QResizeEvent ev( size(), size() );
+        event(&ev);
+    }
     update();
 }
 

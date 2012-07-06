@@ -7,6 +7,11 @@ inline cv::Rect toCv( const QRect& rect )
     return cv::Rect( cv::Point(rect.x(), rect.y()), cv::Size(rect.width(), rect.height())  );
 }
 
+inline cv::Point2f toCv( const QPointF& point )
+{
+    return cv::Point2f( point.x(), point.y() );
+}
+
 inline cv::Point toCv( const QPoint& point )
 {
     return cv::Point( point.x(), point.y() );
@@ -33,6 +38,14 @@ inline QPolygon toQPolygon( const std::vector< cv::Point >& contour )
         poly.append( QOpenCV::toQt( contour[i] ) );
     }
     return poly;
+}
+
+inline std::vector< cv::Point2f > toCv( const QVector< QPointF >& pointvec )
+{
+    std::vector< cv::Point2f > result;
+    foreach(QPointF p, pointvec)
+        result.push_back( toCv(p) );
+    return result;
 }
 
 cv::Rect grow( const cv::Rect& rect, double scale );

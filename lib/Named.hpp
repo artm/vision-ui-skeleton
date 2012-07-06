@@ -17,4 +17,6 @@ protected:
     QObject * m_object;
 };
 
+#define NAMED( name, obj ) (QWidget*)QArtm::Named( name, obj )
+
 }

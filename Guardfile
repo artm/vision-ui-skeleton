@@ -1,7 +1,7 @@
 require './ruby/guard/helpers'
 
 notification :growl
-ignore_paths 'build', 'vendor'
+ignore_paths 'build', 'release', 'vendor'
 
 guard :bundler do
   watch('Gemfile')
@@ -16,7 +16,7 @@ end
 guard :shell do
   watch(/CMakeLists.txt$|\.cmake$|\.(cpp|h|hpp)$/) do |m|
     # ignore_paths doesn't seem to work
-    unless m[0] =~ %r{^(build|vendor|lib/cxxtest)/}
+    unless m[0] =~ %r{^(build|release|vendor|lib/cxxtest)/}
       message("Rebuilding because #{m[0]} has changed", :title => 'Make')
       puts
       File.open("build.log", "w") do |log|

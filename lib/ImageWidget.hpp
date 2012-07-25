@@ -8,7 +8,6 @@ public:
     virtual ~ImageWidget();
     QImage& image() { return m_image; }
     QPicture& overlay() { return m_overlay; }
-    void clearOverlay( ) { m_overlay = QPicture(); }
 
 public slots:
     void setImage( const QImage& image );

@@ -84,7 +84,7 @@ IF (${CMAKE_BUILD_TYPE} STREQUAL Release)
     FILE(WRITE
       ${EXE_CONTENTS}/Resources/qt.conf
       "[Paths]\nPlugins=PlugIns\n")
-    FILE(COPY ${QT_PLUGINS_DIR}/codecs
+    FILE(COPY ${QT_PLUGINS_DIR}/imageformats
       DESTINATION ${EXE_CONTENTS}/PlugIns/
       PATTERN "*_debug.*" EXCLUDE)
     ADD_CUSTOM_COMMAND(
